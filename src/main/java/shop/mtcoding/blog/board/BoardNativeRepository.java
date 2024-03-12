@@ -28,7 +28,7 @@ public class BoardNativeRepository {
     }
     public List<Board> findAll() {
         String q = """
-                SELECT * FROM board_tb
+                SELECT * FROM board_tb ORDER BY id DESC
                 """;
         Query query = entityManager.createNativeQuery(q, Board.class);
 

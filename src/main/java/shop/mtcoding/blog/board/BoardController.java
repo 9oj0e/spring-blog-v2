@@ -23,7 +23,7 @@ public class BoardController {
     public String save(BoardRequest.SaveDTO requestDTO) {
         boardNativeRepository.save(requestDTO);
 
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping({ "/", "/board" })
@@ -51,17 +51,17 @@ public class BoardController {
     }
 
     @PostMapping("/board/{id}/update")
-    public String update(int id, BoardRequest.UpdateDTO requestDTO) {
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         boardNativeRepository.updateById(id, requestDTO);
 
-        return "/board/" + id;
+        return "redirect:/board/" + id;
     }
 
     @PostMapping("/board/{id}/delete")
-    public String delete(int id) {
+    public String delete(@PathVariable int id) {
         boardNativeRepository.deleteById(id);
 
-        return "index";
+        return "redirect:/";
     }
 
 }
