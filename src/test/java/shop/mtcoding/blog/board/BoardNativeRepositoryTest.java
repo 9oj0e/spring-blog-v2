@@ -51,10 +51,7 @@ public class BoardNativeRepositoryTest {
         String title = "제목수정1";
         String content = "내용수정1";
         String username = "bori";
-        BoardRequest.UpdateDTO requestDTO = new BoardRequest.UpdateDTO();
-        requestDTO.setTitle(title);
-        requestDTO.setContent(content);
-        requestDTO.setUsername(username);
+        BoardRequest.UpdateDTO requestDTO = new BoardRequest.UpdateDTO(title, content, username);
 
         // when
         boardNativeRepository.updateById(id, requestDTO);

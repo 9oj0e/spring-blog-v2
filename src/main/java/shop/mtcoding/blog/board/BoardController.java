@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class BoardController {
+    private final BoardPersistRepository boardPersistRepository;
     private final BoardNativeRepository boardNativeRepository;
 
     @GetMapping("/board/save-form")
@@ -21,7 +22,7 @@ public class BoardController {
 
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO) {
-        boardNativeRepository.save(requestDTO);
+        boardPersistRepository.save(requestDTO.toEntity()); // PC
 
         return "redirect:/";
     }
@@ -36,7 +37,7 @@ public class BoardController {
 
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, HttpServletRequest request) {
-        Board board = boardNativeRepository.findById(id);
+        Board board = boardPersistRepository.findById(id); // PC
         request.setAttribute("board", board);
 
         return "/board/detail";
