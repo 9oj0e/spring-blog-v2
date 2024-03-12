@@ -13,11 +13,11 @@ public class BoardController {
 
     @GetMapping("/board/save-form")
     public String saveForm() {
-        return "save-form";
+        return "/board/save-form";
     }
 
     @GetMapping("/board/1")
     public String detail() {
-        return "board/detail";
+        return "/board/detail";
     }
 }
