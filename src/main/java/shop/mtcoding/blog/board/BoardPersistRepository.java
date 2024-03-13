@@ -23,8 +23,9 @@ public class BoardPersistRepository {
         return board; //여기 board는 callByReference. 객체의 내용은 바뀌지만, 같은 객체이다.
     }
     public List<Board> findAll() {
-        // 모름
-        return null;
+        Query query = entityManager.createQuery("SELECT b FROM Board b ORDER BY b.id desc", Board.class);
+
+        return query.getResultList();
     }
     public Board findById(int id) {
         Board board = entityManager.find(Board.class, id);
@@ -33,13 +34,16 @@ public class BoardPersistRepository {
     }
 
     @Transactional
-    public void updateById(Board board, int id) {
-        entityManager.find(Board.class, id);
-        // 모름
+    public void updateById(BoardRequest.UpdateDTO requestDTO, int id) {
+        Board board = findById(id);
+        board.update(requestDTO);
     }
 
+
     @Transactional
-    public void deleteById(Board board) {
-        entityManager.remove(board);
+    public void deleteById(int id) {
+        entityManager.createQuery("DELETE FROM Board b WHERE b.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 }

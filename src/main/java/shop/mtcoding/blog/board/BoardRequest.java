@@ -16,7 +16,6 @@ public class BoardRequest {
         }
     }
 
-    @AllArgsConstructor
     @Data
     public static class UpdateDTO {
         private String username;
