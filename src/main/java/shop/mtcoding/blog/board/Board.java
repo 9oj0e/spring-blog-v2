@@ -1,6 +1,7 @@
 package shop.mtcoding.blog.board;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,11 +22,20 @@ public class Board {
     private String content;
 
 //    @JoinColumn(name = "user_id")
-    @ManyToOne // N : 1, 앞이
+    @ManyToOne(fetch = FetchType.LAZY) // N : 1, 앞이
     private User user; // user_id
 
     @CreationTimestamp // PersistContext 에 들어갈 때, 자동으로 날짜주입
     private Timestamp createdAt;
+
+    @Builder
+    public Board(int id, String title, String content, User user, Timestamp createdAt) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        this.createdAt = createdAt;
+    }
 
     public String getTime() {
         return MyDateUtil.timestampFormat(createdAt);

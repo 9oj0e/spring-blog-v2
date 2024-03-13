@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 @Controller
 public class BoardController {
+    private final BoardRepository boardRepository;
 
     @GetMapping("/board/save-form")
     public String saveForm() {
@@ -28,7 +30,9 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable int id) {
+    public String detail(@PathVariable int id, HttpServletRequest request) {
+        Board board = boardRepository.findByIdJoinUser(id);
+        request.setAttribute("board", board);
 
         return "/board/detail";
     }
