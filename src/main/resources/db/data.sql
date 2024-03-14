@@ -22,3 +22,9 @@ VALUES (3, '제목3', '내용3', now());
 
 INSERT INTO board_tb (user_id, title, content, created_at)
 VALUES (4, '제목4', '내용4', now());
+
+INSERT INTO board_tb (user_id, title, content, created_at)
+VALUES (1, '제목5', '내용5', now());
+
+INSERT INTO board_tb (user_id, title, content, created_at)
+VALUES (2, '제목6', '내용6', now());
