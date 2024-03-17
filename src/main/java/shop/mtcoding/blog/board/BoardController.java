@@ -1,17 +1,20 @@
 package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import shop.mtcoding.blog.user.User;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 public class BoardController {
+    private final HttpSession session;
     private final BoardRepository boardRepository;
 
     @GetMapping("/board/save-form")
@@ -20,12 +23,14 @@ public class BoardController {
     }
 
     @PostMapping("/board/save")
-    public String save() {
+    public String save(BoardRequest.SaveDTO requestDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        boardRepository.save(requestDTO.toEntity(sessionUser));
 
         return "redirect:/";
     }
 
-    @GetMapping({ "/", "/board" })
+    @GetMapping({"/", "/board"})
     public String index(HttpServletRequest request) {
         List<Board> boardList = boardRepository.findAll();
         request.setAttribute("boardList", boardList);
@@ -42,13 +47,16 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}/update-form")
-    public String updateForm(@PathVariable int id) {
+    public String updateForm(@PathVariable int id, HttpServletRequest request) {
+        Board board = boardRepository.findById(id);
+        request.setAttribute("board", board);
 
         return "/board/update-form";
     }
 
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable int id) {
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
+        boardRepository.updateById(id, requestDTO);
 
         return "redirect:/board/" + id;
     }

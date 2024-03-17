@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.blog.user.User;
 
 import java.util.HashSet;
@@ -14,6 +15,13 @@ import java.util.Set;
 @Repository
 public class BoardRepository {
     private final EntityManager em;
+
+    @Transactional
+    public Board save(Board board) {
+        em.persist(board);
+
+        return board;
+    }
 
     public List<Board> findAll() {
         Query query = em.createQuery("SELECT b from Board b ORDER BY b.id DESC", Board.class);
@@ -38,7 +46,7 @@ public class BoardRepository {
         // 동적 쿼리
         for (int i = 1; i <= userIds.length; i++) {
             q2 += i;
-            if (i == userIds.length){
+            if (i == userIds.length) {
                 q2 += ")";
             } else {
                 q2 += ", ";
@@ -50,7 +58,7 @@ public class BoardRepository {
         for (Board board : boardList)
             for (int i = 0; i < userList.size(); i++) {
                 User user = userList.get(i);
-                if (board.getUser().getId() == user.getId()){
+                if (board.getUser().getId() == user.getId()) {
                     board.setUser(user);
                 }
             }
@@ -64,9 +72,18 @@ public class BoardRepository {
         return (Board) query.getSingleResult();
     }
 
-    public Board findById(int id){
+    public Board findById(int id) {
         // id, title, content, user_id(이질감), created_at
         Board board = em.find(Board.class, id);
+
+        return board;
+    }
+
+    @Transactional
+    public Board updateById(int id, BoardRequest.UpdateDTO requestDTO) {
+        Board board = findById(id);
+        board.setTitle(requestDTO.getTitle());
+        board.setContent(requestDTO.getContent());
 
         return board;
     }
