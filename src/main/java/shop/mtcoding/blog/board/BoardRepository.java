@@ -87,4 +87,12 @@ public class BoardRepository {
 
         return board;
     }
+
+    @Transactional
+    public void deleteById(int id) {
+        Query query = em.createQuery("DELETE FROM Board b WHERER b.id = :id");
+        query.setParameter("id", id);
+
+        query.executeUpdate();
+    }
 }
