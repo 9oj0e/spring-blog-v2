@@ -37,14 +37,10 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO requestDTO) {
-        try {
-            User sessionUser = userRepository.findByUsernameAndPassword(requestDTO);
-            session.setAttribute("sessionUser", sessionUser);
+        User sessionUser = userService.login(requestDTO);
+        session.setAttribute("sessionUser", sessionUser);
 
-            return "redirect:/";
-        } catch (EmptyResultDataAccessException e) {
-            throw new Exception401("아이디 혹은 비밀번호가 틀렸습니다");
-        }
+        return "redirect:/";
     }
 
     @GetMapping("/user/update-form")
