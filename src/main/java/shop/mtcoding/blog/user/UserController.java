@@ -15,7 +15,6 @@ import shop.mtcoding.blog._core.errors.exception.Exception401;
 @Controller
 public class UserController {
     private final HttpSession session;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @GetMapping("/join-form")
@@ -46,7 +45,7 @@ public class UserController {
     @GetMapping("/user/update-form")
     public String updateForm(HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        User user = userRepository.findById(sessionUser.getId());
+        User user = userService.updateForm(sessionUser.getId());
         request.setAttribute("user", user);
 
         return "/user/update-form";
@@ -55,7 +54,7 @@ public class UserController {
     @PostMapping("/user/update")
     public String update(UserRequest.UpdateDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        User newSessionUser = userRepository.updateById(sessionUser.getId(), requestDTO);
+        User newSessionUser = userService.update(sessionUser.getId(), requestDTO);
         session.setAttribute("sessionUser", newSessionUser);
 
         return "redirect:/";

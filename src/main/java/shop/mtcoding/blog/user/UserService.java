@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.blog._core.errors.exception.Exception400;
 import shop.mtcoding.blog._core.errors.exception.Exception401;
+import shop.mtcoding.blog._core.errors.exception.Exception404;
 
 import java.util.Optional;
 
@@ -28,6 +29,22 @@ public class UserService {
         User sessoinUser = userJPARepository
                 .findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword())
                 .orElseThrow(() -> new Exception401("인증되지 않았습니다."));
+
         return sessoinUser;
+    }
+
+    public User updateForm(int id) {
+        return userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("찾을 수 없는 계정입니다"));
+    }
+
+    @Transactional
+    public User update(int id, UserRequest.UpdateDTO requestDTO) {
+        User user = userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다."));
+        user.setPassword(requestDTO.getPassword());
+        user.setEmail(requestDTO.getEmail());
+
+        return user;
     }
 }
