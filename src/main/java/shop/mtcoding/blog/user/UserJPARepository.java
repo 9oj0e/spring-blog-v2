@@ -13,4 +13,5 @@ public interface UserJPARepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsernameAndPassword(@Param("username") String username, @Param("password")String password);
     // JPA Query Methods
     // camel표기법에서 대문자로 바뀌는 부분을 알아서 WHERE절에 넣고, PARAM부분을 ?로 만들어서 받아온다.
+    Optional<User> findByUsername(@Param("username")String username);
 }
