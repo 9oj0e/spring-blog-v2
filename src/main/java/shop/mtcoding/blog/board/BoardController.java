@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog._core.errors.exception.Exception403;
 import shop.mtcoding.blog.user.User;
 
@@ -27,39 +28,32 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardService.upload(requestDTO, sessionUser);
+        boardService.createBoard(requestDTO, sessionUser);
 
         return "redirect:/";
     }
 
     @GetMapping({"/", "/board"})
     public String index(HttpServletRequest request) {
-        List<Board> boardList = boardRepository.findAll();
+        List<Board> boardList = boardService.getBoardList();
         request.setAttribute("boardList", boardList);
 
         return "index";
     }
 
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable int id, HttpServletRequest request) {
+    public String detail(@PathVariable Integer id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardRepository.findByIdJoinUser(id);
-        boolean isOwner = false;
-        if (sessionUser != null){
-            if (sessionUser.getId() == board.getUser().getId()) {
-                isOwner = true;
-            }
-        }
-        request.setAttribute("isOwner", isOwner);
-        request.setAttribute("board", board);
+        BoardResponse.DetailDTO boardDetail = boardService.getBoard(id, sessionUser);
+        request.setAttribute("boardDetail", boardDetail);
 
-        return "/board/detail";
+        return "board/detail";
     }
 
     @GetMapping("/board/{id}/update-form")
     public String updateForm(@PathVariable int id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardService.updateForm(id, sessionUser.getId());
+        Board board = boardService.updateBoardForm(id, sessionUser.getId());
         request.setAttribute("board", board);
 
         return "/board/update-form";
@@ -68,7 +62,7 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardService.update(id, sessionUser.getId(), requestDTO);
+        boardService.updateBoard(id, sessionUser.getId(), requestDTO);
 
         return "redirect:/board/" + id;
     }
@@ -76,11 +70,7 @@ public class BoardController {
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardRepository.findById(id);
-        if(sessionUser.getId() != board.getUser().getId()) {
-            throw new Exception403("게시글을 삭제할 권한이 없습니다.");
-        }
-        boardRepository.deleteById(id);
+        boardService.deleteBoard(id, sessionUser.getId());
 
         return "redirect:/";
     }
