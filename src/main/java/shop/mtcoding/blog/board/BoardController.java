@@ -17,6 +17,7 @@ import java.util.List;
 public class BoardController {
     private final HttpSession session;
     private final BoardRepository boardRepository;
+    private final BoardService boardService;
 
     @GetMapping("/board/save-form")
     public String saveForm() {
@@ -26,7 +27,7 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardRepository.save(requestDTO.toEntity(sessionUser));
+        boardService.upload(requestDTO, sessionUser);
 
         return "redirect:/";
     }
@@ -57,7 +58,8 @@ public class BoardController {
 
     @GetMapping("/board/{id}/update-form")
     public String updateForm(@PathVariable int id, HttpServletRequest request) {
-        Board board = boardRepository.findById(id);
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Board board = boardService.updateForm(id, sessionUser.getId());
         request.setAttribute("board", board);
 
         return "/board/update-form";
@@ -66,11 +68,7 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardRepository.findById(id);
-        if(sessionUser.getId() != board.getUser().getId()) {
-            throw new Exception403("게시글을 수정할 권한이 없습니다.");
-        }
-        boardRepository.updateById(id, requestDTO);
+        boardService.update(id, sessionUser.getId(), requestDTO);
 
         return "redirect:/board/" + id;
     }
