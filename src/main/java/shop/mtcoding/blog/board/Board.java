@@ -24,7 +24,7 @@ public class Board {
     private String title;
     private String content;
 
-//    @JoinColumn(name = "user_id")
+    //    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY) // N : 1, 앞이 N
     private User user; // user_id
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -34,13 +34,11 @@ public class Board {
     private Timestamp createdAt;
 
     @Transient
-    private boolean replyOwner;
-    @Transient
     private boolean boardOwner;
 
-    public void isBoardOwner(User sessionUser){
-        if (sessionUser != null){
-            if(sessionUser.getId() == this.id){
+    public void isBoardOwner(User sessionUser) {
+        if (sessionUser != null) {
+            if (sessionUser.getId() == this.id) {
                 boardOwner = true;
             }
         }

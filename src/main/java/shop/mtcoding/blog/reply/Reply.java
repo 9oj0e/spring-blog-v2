@@ -28,14 +28,13 @@ public class Reply {
     private Board board; // board 1 : reply N
 
     @Transient
-    private boolean isReplyOwner;
-    /*
+    private boolean ReplyOwner;
     public void isReplyOwner(User sessionUser) {
         if(sessionUser.getId() == user.getId()) {
-            isReplyOwner = true;
+            ReplyOwner = true;
         }
     }
-    */
+
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
     @Builder

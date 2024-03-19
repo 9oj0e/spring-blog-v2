@@ -67,12 +67,9 @@ public class BoardService {
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
         if (sessionUser != null) {
             board.isBoardOwner(sessionUser);
-            board.getReplies().forEach(reply -> {{
-                    boolean isReplyOwner = false;
-                    if (sessionUser.getId() == reply.getUser().getId()) {
-                        isReplyOwner = true;
-                    }
-                reply.setReplyOwner(isReplyOwner);
+            board.getReplies().forEach(reply -> {
+                {
+                    reply.isReplyOwner(sessionUser);
                 }
             });
             return new BoardResponse.DetailDTO(board, board.getReplies(), sessionUser);
