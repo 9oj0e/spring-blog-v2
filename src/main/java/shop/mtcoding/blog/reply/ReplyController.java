@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.board.BoardRequest;
 import shop.mtcoding.blog.board.BoardService;
@@ -23,10 +24,11 @@ public class ReplyController {
 
         return "redirect:/board/" + requestDTO.getBoardId();
     }
+
     @PostMapping("/reply/{replyId}/delete")
-    public String delete(@PathVariable int replyId) {
+    public String delete(@PathVariable int replyId, int boardId) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        int boardId = replyService.removeReply(replyId, sessionUser.getId());
+        replyService.removeReply(replyId, sessionUser.getId());
 
         return "redirect:/board/" + boardId;
     }

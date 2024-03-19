@@ -18,19 +18,19 @@ public class ReplyService {
     @Transactional
     public void addReply(ReplyRequest.SaveDTO requestDTO, User sessionUser) {
         Board board = boardJPARepository.findById(requestDTO.getBoardId())
-                        .orElseThrow(() -> new Exception404("없는 게시물입니다."));
+                .orElseThrow(() -> new Exception404("없는 게시물입니다."));
+
         replyJPARepository.save(requestDTO.toEntity(sessionUser, board));
     }
 
     @Transactional
-    public int removeReply(int replyId, int sessionUserId) {
+    public void removeReply(int replyId, int sessionUserId) {
         Reply reply = replyJPARepository.findById(replyId)
                 .orElseThrow(() -> new Exception404("해당 댓글을 찾을 수 없습니다."));
-        int boardId = reply.getBoard().getId();
         if (reply.getUser().getId() != sessionUserId) {
             throw new Exception403("댓글을 삭제할 권한이 없습니다.");
         }
+
         replyJPARepository.deleteById(replyId);
-        return boardId;
     }
 }
