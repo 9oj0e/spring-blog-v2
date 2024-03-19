@@ -17,7 +17,6 @@ import java.util.List;
 @Controller
 public class BoardController {
     private final HttpSession session;
-    private final BoardRepository boardRepository;
     private final BoardService boardService;
 
     @GetMapping("/board/save-form")

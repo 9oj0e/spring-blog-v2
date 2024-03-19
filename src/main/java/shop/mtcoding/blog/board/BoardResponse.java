@@ -1,7 +1,10 @@
 package shop.mtcoding.blog.board;
 
 import lombok.Data;
+import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.user.User;
+
+import java.util.List;
 
 public class BoardResponse {
     @Data
@@ -11,6 +14,7 @@ public class BoardResponse {
         private String title;
         private String content;
         private UserDTO user;
+        private List<Reply> replies;
         private boolean isOwner;
 
         @Data
@@ -23,10 +27,11 @@ public class BoardResponse {
             }
         }
 
-        public DetailDTO(Board board, User sessionUser) {
+        public DetailDTO(Board board, List<Reply> replies, User sessionUser) {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
+            this.replies = replies;
             this.user = new UserDTO(board.getUser());
 
             this.isOwner = false;
