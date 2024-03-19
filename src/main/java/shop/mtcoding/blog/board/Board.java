@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.user.User;
 import shop.mtcoding.blog._core.util.MyDateUtil;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor // Entity는 무조건 기본 생성자가 필요하다.
 @Data
@@ -22,8 +25,10 @@ public class Board {
     private String content;
 
 //    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY) // N : 1, 앞이
+    @ManyToOne(fetch = FetchType.LAZY) // N : 1, 앞이 N
     private User user; // user_id
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Reply> replies = new ArrayList<>(); // table의 field가 될 수 없으니 반대
 
     @CreationTimestamp // PersistContext 에 들어갈 때, 자동으로 날짜주입
     private Timestamp createdAt;

@@ -9,6 +9,8 @@ import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.user.User;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -27,7 +29,6 @@ public class Reply {
 
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
-
     @Builder
     public Reply(Integer id, String comment, User user, Board board, Timestamp createdAt) {
         this.id = id;
