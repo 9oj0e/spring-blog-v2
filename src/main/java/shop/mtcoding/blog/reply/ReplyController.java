@@ -20,6 +20,14 @@ public class ReplyController {
     public String save(ReplyRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         replyService.addReply(requestDTO, sessionUser);
+
         return "redirect:/board/" + requestDTO.getBoardId();
+    }
+    @PostMapping("/reply/{replyId}/delete")
+    public String delete(@PathVariable int replyId) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        int boardId = replyService.removeReply(replyId, sessionUser.getId());
+
+        return "redirect:/board/" + boardId;
     }
 }
