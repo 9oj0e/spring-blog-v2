@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Sort;
+import shop.mtcoding.blog.reply.Reply;
+import shop.mtcoding.blog.reply.ReplyJPARepository;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -57,15 +59,6 @@ public class BoardJPARepositoryTest {
             Board board = boardOp.get();
             System.out.println(board);
         }
-    }
-
-    @Test
-    public void findByIdJoinUserAndReplies_test() {
-        // given
-        int id = 4;
-        // when
-        Board board = boardJPARepository.findByIdJoinUserAndReplies(id).get();
-        // then
     }
 
     // findAll

@@ -15,7 +15,7 @@ public class UserService {
     private final UserJPARepository userJPARepository;
 
     @Transactional
-    public void signUp(UserRequest.JoinDTO requestDTO) {
+    public void addUser(UserRequest.JoinDTO requestDTO) {
         // 유저네임 중복 검사
         Optional<User> userOp = userJPARepository.findByUsername(requestDTO.getUsername());
         if (userOp.isPresent()) { // 존재하면 안된다.
@@ -24,7 +24,8 @@ public class UserService {
         userJPARepository.save(requestDTO.toEntity());
     }
 
-    public User login(UserRequest.LoginDTO requestDTO) {
+    public User findUser(UserRequest.LoginDTO requestDTO) {
+        // login
         // hash 검사가 추가될 것.
         User sessoinUser = userJPARepository
                 .findByUsernameAndPassword(requestDTO.getUsername(), requestDTO.getPassword())
@@ -33,13 +34,14 @@ public class UserService {
         return sessoinUser;
     }
 
-    public User updateForm(int id) {
+    public User findUser(int id) {
+        // to updateForm
         return userJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("찾을 수 없는 계정입니다"));
     }
 
     @Transactional
-    public User update(int id, UserRequest.UpdateDTO requestDTO) {
+    public User modifyUser(int id, UserRequest.UpdateDTO requestDTO) {
         User user = userJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("회원정보를 찾을 수 없습니다."));
         user.setPassword(requestDTO.getPassword());

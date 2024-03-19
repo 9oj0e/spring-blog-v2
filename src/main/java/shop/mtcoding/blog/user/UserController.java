@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO) {
-        userService.signUp(requestDTO);
+        userService.addUser(requestDTO);
 
         return "/user/join-form";
     }
@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO requestDTO) {
-        User sessionUser = userService.login(requestDTO);
+        User sessionUser = userService.findUser(requestDTO);
         session.setAttribute("sessionUser", sessionUser);
 
         return "redirect:/";
@@ -45,7 +45,7 @@ public class UserController {
     @GetMapping("/user/update-form")
     public String updateForm(HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        User user = userService.updateForm(sessionUser.getId());
+        User user = userService.findUser(sessionUser.getId());
         request.setAttribute("user", user);
 
         return "/user/update-form";
@@ -54,7 +54,7 @@ public class UserController {
     @PostMapping("/user/update")
     public String update(UserRequest.UpdateDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        User newSessionUser = userService.update(sessionUser.getId(), requestDTO);
+        User newSessionUser = userService.modifyUser(sessionUser.getId(), requestDTO);
         session.setAttribute("sessionUser", newSessionUser);
 
         return "redirect:/";

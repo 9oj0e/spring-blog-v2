@@ -16,11 +16,12 @@ public class BoardService {
     private final BoardJPARepository boardJPARepository;
 
     @Transactional
-    public void createBoard(BoardRequest.SaveDTO requestDTO, User sessionUser) {
+    public void addBoard(BoardRequest.SaveDTO requestDTO, User sessionUser) {
         boardJPARepository.save(requestDTO.toEntity(sessionUser));
     }
 
-    public Board updateBoardForm(int id, int sessionUserId) {
+    public Board findBoard(int id, int sessionUserId) {
+        // to updateForm
         Board board = boardJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
         if (sessionUserId != board.getUser().getId()) {
@@ -30,7 +31,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(int boardId, int sessionUserId, BoardRequest.UpdateDTO requestDTO) {
+    public void modifyBoard(int boardId, int sessionUserId, BoardRequest.UpdateDTO requestDTO) {
         // 1. 조회 및 예외 처리
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new Exception404("게시물을 찾을 수 없습니다."));
@@ -44,7 +45,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(int boardId, int sessionUserId) {
+    public void removeBoard(int boardId, int sessionUserId) {
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
         if (sessionUserId != board.getUser().getId()) {
@@ -54,17 +55,29 @@ public class BoardService {
         boardJPARepository.deleteById(boardId);
     }
 
-    public List<Board> getBoardList() { // 글 목록 조회
+    public List<Board> findBoardList() { // 글 목록 조회
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         // 날짜 파싱.. 등등이 들어갈 것.
         return boardJPARepository.findAll(sort);
     }
 
-    // board, isOwner
-    public BoardResponse.DetailDTO getBoard(int boardId, User sessionUser) {
+    public BoardResponse.DetailDTO findBoard(int boardId, User sessionUser) {
+        // to detail 글 상세보기
         Board board = boardJPARepository.findByIdJoinUser(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
-
-        return new BoardResponse.DetailDTO(board, board.getReplies() ,sessionUser);
+        if (sessionUser != null) {
+            board.isBoardOwner(sessionUser);
+            board.getReplies().forEach(reply -> {{
+                    boolean isReplyOwner = false;
+                    if (sessionUser.getId() == reply.getUser().getId()) {
+                        isReplyOwner = true;
+                    }
+                reply.setReplyOwner(isReplyOwner);
+                }
+            });
+            return new BoardResponse.DetailDTO(board, board.getReplies(), sessionUser);
+        } else {
+            return new BoardResponse.DetailDTO(board, board.getReplies());
+        }
     }
 }

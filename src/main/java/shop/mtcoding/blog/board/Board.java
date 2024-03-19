@@ -27,11 +27,24 @@ public class Board {
 //    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY) // N : 1, 앞이 N
     private User user; // user_id
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Reply> replies = new ArrayList<>(); // table의 field가 될 수 없으니 반대
 
     @CreationTimestamp // PersistContext 에 들어갈 때, 자동으로 날짜주입
     private Timestamp createdAt;
+
+    @Transient
+    private boolean replyOwner;
+    @Transient
+    private boolean boardOwner;
+
+    public void isBoardOwner(User sessionUser){
+        if (sessionUser != null){
+            if(sessionUser.getId() == this.id){
+                boardOwner = true;
+            }
+        }
+    }
 
     @Builder
     public Board(int id, String title, String content, User user, Timestamp createdAt) {
