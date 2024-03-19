@@ -27,14 +27,14 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardService.createBoard(requestDTO, sessionUser);
+        boardService.addBoard(requestDTO, sessionUser);
 
         return "redirect:/";
     }
 
     @GetMapping({"/", "/board"})
     public String index(HttpServletRequest request) {
-        List<Board> boardList = boardService.getBoardList();
+        List<Board> boardList = boardService.findBoardList();
         request.setAttribute("boardList", boardList);
 
         return "index";
@@ -43,7 +43,7 @@ public class BoardController {
     @GetMapping("/board/{id}")
     public String detail(@PathVariable Integer id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        BoardResponse.DetailDTO boardDetail = boardService.getBoard(id, sessionUser);
+        BoardResponse.DetailDTO boardDetail = boardService.findBoard(id, sessionUser);
         request.setAttribute("boardDetail", boardDetail);
 
         return "board/detail";
@@ -52,7 +52,7 @@ public class BoardController {
     @GetMapping("/board/{id}/update-form")
     public String updateForm(@PathVariable int id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardService.updateBoardForm(id, sessionUser.getId());
+        Board board = boardService.findBoard(id, sessionUser.getId());
         request.setAttribute("board", board);
 
         return "/board/update-form";
@@ -61,7 +61,7 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardService.updateBoard(id, sessionUser.getId(), requestDTO);
+        boardService.modifyBoard(id, sessionUser.getId(), requestDTO);
 
         return "redirect:/board/" + id;
     }
@@ -69,7 +69,7 @@ public class BoardController {
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        boardService.deleteBoard(id, sessionUser.getId());
+        boardService.removeBoard(id, sessionUser.getId());
 
         return "redirect:/";
     }

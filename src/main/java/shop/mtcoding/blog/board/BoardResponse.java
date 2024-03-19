@@ -42,5 +42,13 @@ public class BoardResponse {
                 }
             }
         }
+
+        public DetailDTO(Board board, List<Reply> replies) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.replies = replies;
+            this.user = new UserDTO(board.getUser());
+        }
     }
 }

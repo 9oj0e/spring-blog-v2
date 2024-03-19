@@ -27,6 +27,14 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board; // board 1 : reply N
 
+    @Transient
+    private boolean ReplyOwner;
+    public void isReplyOwner(User sessionUser) {
+        if(sessionUser.getId() == user.getId()) {
+            ReplyOwner = true;
+        }
+    }
+
     @CreationTimestamp // pc -> db (날짜주입)
     private Timestamp createdAt;
     @Builder
