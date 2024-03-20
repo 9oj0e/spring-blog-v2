@@ -16,11 +16,11 @@ public class ReplyService {
     private final ReplyJPARepository replyJPARepository;
 
     @Transactional
-    public void addReply(ReplyRequest.SaveDTO requestDTO, User sessionUser) {
+    public Reply addReply(ReplyRequest.SaveDTO requestDTO, User sessionUser) {
         Board board = boardJPARepository.findById(requestDTO.getBoardId())
                 .orElseThrow(() -> new Exception404("없는 게시물입니다."));
 
-        replyJPARepository.save(requestDTO.toEntity(sessionUser, board));
+        return replyJPARepository.save(requestDTO.toEntity(sessionUser, board));
     }
 
     @Transactional

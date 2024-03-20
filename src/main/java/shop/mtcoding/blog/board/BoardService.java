@@ -16,8 +16,8 @@ public class BoardService {
     private final BoardJPARepository boardJPARepository;
 
     @Transactional
-    public void addBoard(BoardRequest.SaveDTO requestDTO, User sessionUser) {
-        boardJPARepository.save(requestDTO.toEntity(sessionUser));
+    public Board addBoard(BoardRequest.SaveDTO requestDTO, User sessionUser) {
+        return boardJPARepository.save(requestDTO.toEntity(sessionUser));
     }
 
     public Board findBoard(int id, int sessionUserId) {
@@ -31,7 +31,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void modifyBoard(int boardId, int sessionUserId, BoardRequest.UpdateDTO requestDTO) {
+    public Board modifyBoard(int boardId, int sessionUserId, BoardRequest.UpdateDTO requestDTO) {
         // 1. 조회 및 예외 처리
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new Exception404("게시물을 찾을 수 없습니다."));
@@ -42,6 +42,8 @@ public class BoardService {
         // 3. 글 수정
         board.setTitle(requestDTO.getTitle());
         board.setContent(requestDTO.getContent());
+
+        return board;
     }
 
     @Transactional

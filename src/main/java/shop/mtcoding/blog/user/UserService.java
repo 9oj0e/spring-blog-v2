@@ -15,13 +15,14 @@ public class UserService {
     private final UserJPARepository userJPARepository;
 
     @Transactional
-    public void addUser(UserRequest.JoinDTO requestDTO) {
+    public User addUser(UserRequest.JoinDTO requestDTO) {
         // 유저네임 중복 검사
         Optional<User> userOp = userJPARepository.findByUsername(requestDTO.getUsername());
         if (userOp.isPresent()) { // 존재하면 안된다.
             throw new Exception400("중복된 유저네임입니다.");
+        } else {
+            return userJPARepository.save(requestDTO.toEntity());
         }
-        userJPARepository.save(requestDTO.toEntity());
     }
 
     public User findUser(UserRequest.LoginDTO requestDTO) {

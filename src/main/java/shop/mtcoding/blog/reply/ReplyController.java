@@ -2,6 +2,7 @@ package shop.mtcoding.blog.reply;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,18 +20,18 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/api/replies/")
-    public String save(ReplyRequest.SaveDTO requestDTO) {
+    public ResponseEntity<?> save(@RequestBody ReplyRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        replyService.addReply(requestDTO, sessionUser);
+        Reply reply = replyService.addReply(requestDTO, sessionUser);
 
-        return "redirect:/board/" + requestDTO.getBoardId();
+        return ResponseEntity.ok(reply);
     }
 
     @DeleteMapping("/api/replies/{id}")
-    public String delete(@PathVariable int id, int boardId) {
+    public ResponseEntity<?> delete(@PathVariable int id, @RequestBody int boardId) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         replyService.removeReply(id, sessionUser.getId());
 
-        return "redirect:/board/" + boardId;
+        return ResponseEntity.ok(null);
     }
 }

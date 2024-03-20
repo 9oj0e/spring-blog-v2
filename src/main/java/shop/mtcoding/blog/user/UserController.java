@@ -2,47 +2,47 @@ package shop.mtcoding.blog.user;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.blog._core.utils.ApiUtil;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class UserController {
     private final HttpSession session;
     private final UserService userService;
 
     @PostMapping("/join")
-    public String join(UserRequest.JoinDTO requestDTO) {
-        userService.addUser(requestDTO);
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDTO requestDTO) {
+        User user = userService.addUser(requestDTO);
 
-        return "/user/join-form";
+        return ResponseEntity.ok(new ApiUtil<>(user));
     }
 
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO requestDTO) {
+    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO) {
         User sessionUser = userService.findUser(requestDTO);
         session.setAttribute("sessionUser", sessionUser);
 
-        return "redirect:/";
+        return ResponseEntity.ok(new ApiUtil<>(null));
     }
 
     // todo: 회원정보 조회 api @GetMapping("/api/users/{id}")
 
     @PutMapping("/api/users/{id}")
-    public String update(UserRequest.UpdateDTO requestDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UserRequest.UpdateDTO requestDTO) {
+        // 여기서 id는 필요없다. 하지만 가독성을 높이기 위해서, 넣는다.
         User sessionUser = (User) session.getAttribute("sessionUser");
         User newSessionUser = userService.modifyUser(sessionUser.getId(), requestDTO);
         session.setAttribute("sessionUser", newSessionUser);
 
-        return "redirect:/";
+        return ResponseEntity.ok(new ApiUtil<>(newSessionUser));
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public ResponseEntity<?> logout() {
         session.invalidate();
 
-        return "redirect:/";
+        return ResponseEntity.ok(new ApiUtil<>(null));
     }
 }
