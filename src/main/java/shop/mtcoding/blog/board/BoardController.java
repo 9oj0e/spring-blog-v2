@@ -44,6 +44,6 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.removeBoard(id, sessionUser.getId());
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(new ApiUtil<>(null));
     }
 }

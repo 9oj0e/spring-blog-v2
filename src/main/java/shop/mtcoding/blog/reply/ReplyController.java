@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import shop.mtcoding.blog._core.utils.ApiUtil;
 import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.board.BoardRequest;
 import shop.mtcoding.blog.board.BoardService;
@@ -24,7 +25,7 @@ public class ReplyController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         Reply reply = replyService.addReply(requestDTO, sessionUser);
 
-        return ResponseEntity.ok(reply);
+        return ResponseEntity.ok(new ApiUtil<>(reply));
     }
 
     @DeleteMapping("/api/replies/{id}")
@@ -32,6 +33,6 @@ public class ReplyController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         replyService.removeReply(id, sessionUser.getId());
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(new ApiUtil<>(null));
     }
 }
