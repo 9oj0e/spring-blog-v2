@@ -40,10 +40,10 @@ public class BoardController {
     }
 
     @DeleteMapping("/api/boards/{id}")
-    public String delete(@PathVariable int id) {
+    public ResponseEntity<?> delete(@PathVariable int id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.removeBoard(id, sessionUser.getId());
 
-        return "redirect:/";
+        return ResponseEntity.ok(null);
     }
 }
