@@ -3,13 +3,14 @@ package shop.mtcoding.blog.board;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog._core.utils.ApiUtil;
 import shop.mtcoding.blog.user.User;
 
+import java.util.List;
+
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class BoardController {
     private final HttpSession session;
     private final BoardService boardService;
@@ -22,13 +23,28 @@ public class BoardController {
         return ResponseEntity.ok(new ApiUtil<>(board));
     }
 
-    // todo : 글 목록 조회 api 필요    @GetMapping("/")
+    @GetMapping("/")
+    public ResponseEntity<?> index() {
+        List<Board> boardList = boardService.findBoardList();
 
+        return ResponseEntity.ok(new ApiUtil<>(boardList));
+    }
 
-    // todo : 글 상세보기 api 필요    @GetMapping("/api/boards/{id}/detail")
+    @GetMapping("/api/boards/{id}/detail")
+    public ResponseEntity<?> detail(@PathVariable Integer id, BoardResponse.DetailDTO responseDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        responseDTO = boardService.findBoard(id, sessionUser);
 
+        return ResponseEntity.ok(new ApiUtil<>(responseDTO));
+    }
 
-    // todo : 글 조회 api 필요 (update-form) @GetMapping("/api/boards/{id}")
+    @GetMapping("/api/boards/{id}")
+    public ResponseEntity<?> updateForm(@PathVariable Integer id) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Board board = boardService.findBoard(id, sessionUser.getId());
+
+        return ResponseEntity.ok(new ApiUtil<>(board));
+    }
 
 
     @PutMapping("/api/boards/{id}")

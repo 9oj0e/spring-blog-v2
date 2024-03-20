@@ -3,19 +3,12 @@ package shop.mtcoding.blog.reply;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog._core.utils.ApiUtil;
-import shop.mtcoding.blog.board.Board;
-import shop.mtcoding.blog.board.BoardRequest;
-import shop.mtcoding.blog.board.BoardService;
 import shop.mtcoding.blog.user.User;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ReplyController {
     private final HttpSession session;
     private final ReplyService replyService;
@@ -29,7 +22,7 @@ public class ReplyController {
     }
 
     @DeleteMapping("/api/replies/{id}")
-    public ResponseEntity<?> delete(@PathVariable int id, @RequestBody int boardId) {
+    public ResponseEntity<?> delete(@PathVariable int id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         replyService.removeReply(id, sessionUser.getId());
 

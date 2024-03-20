@@ -27,7 +27,12 @@ public class UserController {
         return ResponseEntity.ok(new ApiUtil<>(null));
     }
 
-    // todo: 회원정보 조회 api @GetMapping("/api/users/{id}")
+    @GetMapping("/api/users/{id}")
+    public ResponseEntity<?> updateForm(@PathVariable Integer id) {
+        User user = userService.findUser(id);
+
+        return ResponseEntity.ok(new ApiUtil<>(user));
+    }
 
     @PutMapping("/api/users/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UserRequest.UpdateDTO requestDTO) {
