@@ -19,11 +19,6 @@ public class BoardController {
     private final HttpSession session;
     private final BoardService boardService;
 
-    @GetMapping("/board/save-form")
-    public String saveForm() {
-        return "/board/save-form";
-    }
-
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -32,31 +27,11 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping({"/", "/board"})
-    public String index(HttpServletRequest request) {
-        List<Board> boardList = boardService.findBoardList();
-        request.setAttribute("boardList", boardList);
+    // todo : 글 목록 조회 api 필요
 
-        return "index";
-    }
+    // todo : 글 상세보기 api 필요
 
-    @GetMapping("/board/{id}")
-    public String detail(@PathVariable Integer id, HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        BoardResponse.DetailDTO boardDetail = boardService.findBoard(id, sessionUser);
-        request.setAttribute("boardDetail", boardDetail);
-
-        return "board/detail";
-    }
-
-    @GetMapping("/board/{id}/update-form")
-    public String updateForm(@PathVariable int id, HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardService.findBoard(id, sessionUser.getId());
-        request.setAttribute("board", board);
-
-        return "/board/update-form";
-    }
+    // todo : 글 조회 api 필요 (update-form)
 
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {

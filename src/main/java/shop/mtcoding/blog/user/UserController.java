@@ -17,21 +17,11 @@ public class UserController {
     private final HttpSession session;
     private final UserService userService;
 
-    @GetMapping("/join-form")
-    public String joinForm() {
-        return "/user/join-form";
-    }
-
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO) {
         userService.addUser(requestDTO);
 
         return "/user/join-form";
-    }
-
-    @GetMapping("/login-form")
-    public String loginForm() {
-        return "/user/login-form";
     }
 
     @PostMapping("/login")
@@ -42,14 +32,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/user/update-form")
-    public String updateForm(HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        User user = userService.findUser(sessionUser.getId());
-        request.setAttribute("user", user);
-
-        return "/user/update-form";
-    }
+    // todo: 회원정보 조회 api
 
     @PostMapping("/user/update")
     public String update(UserRequest.UpdateDTO requestDTO) {
