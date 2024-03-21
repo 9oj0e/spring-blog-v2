@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import shop.mtcoding.blog._core.errors.exception.Exception400;
-import shop.mtcoding.blog._core.errors.exception.Exception401;
-import shop.mtcoding.blog._core.errors.exception.Exception403;
-import shop.mtcoding.blog._core.errors.exception.Exception500;
+import shop.mtcoding.blog._core.errors.exception.*;
 import shop.mtcoding.blog._core.utils.ApiUtil;
 
 @RestControllerAdvice
@@ -34,7 +31,7 @@ public class MyExceptionHandler {
         return new ResponseEntity<>(apiUtil, HttpStatus.FORBIDDEN); // http body, http header
     }
 
-    @ExceptionHandler(Exception403.class)
+    @ExceptionHandler(Exception404.class)
     public ResponseEntity<?> ex404(Exception401 e) {
         ApiUtil<?> apiUtil = new ApiUtil<>(404, e.getMessage()); // http body -> 구성한 객체
 

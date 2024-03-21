@@ -25,7 +25,7 @@ public class BoardController {
 
     @GetMapping("/")
     public ResponseEntity<?> index() {
-        List<Board> boardList = boardService.findBoardList();
+        List<BoardResponse.MainDTO> boardList = boardService.findBoardList();
 
         return ResponseEntity.ok(new ApiUtil<>(boardList));
     }

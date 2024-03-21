@@ -35,10 +35,11 @@ public class UserService {
         return sessoinUser;
     }
 
-    public User findUser(int id) {
+    public UserResponse.DTO findUser(int id) {
         // to updateForm
-        return userJPARepository.findById(id)
+        User user = userJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("찾을 수 없는 계정입니다"));
+        return new UserResponse.DTO(user);
     }
 
     @Transactional

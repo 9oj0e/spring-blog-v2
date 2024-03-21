@@ -57,10 +57,11 @@ public class BoardService {
         boardJPARepository.deleteById(boardId);
     }
 
-    public List<Board> findBoardList() { // 글 목록 조회
+    public List<BoardResponse.MainDTO> findBoardList() { // 글 목록 조회
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        // 날짜 파싱.. 등등이 들어갈 것.
-        return boardJPARepository.findAll(sort);
+        List<Board> boardList = boardJPARepository.findAll(sort);
+
+        return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
     }
 
     public BoardResponse.DetailDTO findBoard(int boardId, User sessionUser) {

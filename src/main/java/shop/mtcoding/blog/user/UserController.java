@@ -29,9 +29,9 @@ public class UserController {
 
     @GetMapping("/api/users/{id}")
     public ResponseEntity<?> updateForm(@PathVariable Integer id) {
-        User user = userService.findUser(id);
+        UserResponse.DTO responseDTO = userService.findUser(id);
 
-        return ResponseEntity.ok(new ApiUtil<>(user));
+        return ResponseEntity.ok(new ApiUtil<>(responseDTO));
     }
 
     @PutMapping("/api/users/{id}")
