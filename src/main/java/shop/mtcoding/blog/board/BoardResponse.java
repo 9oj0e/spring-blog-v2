@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.board;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.user.User;
@@ -17,6 +18,16 @@ public class BoardResponse {
             this.id = board.getId();
             this.title = board.getTitle();
         }
+    }
+
+    @AllArgsConstructor
+    @Data
+    public static class WithCountDTO {
+        private Integer id;
+        private String title;
+        private String content;
+        private Integer userId;
+        private Long replyCount;
     }
 
     @Data

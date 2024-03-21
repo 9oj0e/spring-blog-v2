@@ -66,8 +66,18 @@ public class BoardJPARepositoryTest {
         // given
         int id = 4;
         // when
-        Board board = boardJPARepository.findByIdJoinUserAndReplies(id).get();
+        Board board = boardJPARepository.findByIdJoinUser(id).get();
         // then
+    }
+
+    @Test
+    public void findAllWithReplyCount_test(){
+        // given
+
+        // when
+        List<BoardResponse.WithCountDTO> boardCountDTOList = boardJPARepository.findAllWithReplyCount();
+        // then
+        System.out.println(boardCountDTOList);
     }
 
     // findAll
