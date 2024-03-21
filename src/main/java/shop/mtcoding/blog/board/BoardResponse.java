@@ -4,6 +4,7 @@ import lombok.Data;
 import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardResponse {
@@ -17,48 +18,49 @@ public class BoardResponse {
             this.title = board.getTitle();
         }
     }
+
     @Data
     public static class DetailDTO {
-
         private int id;
         private String title;
         private String content;
-        private UserDTO user;
-        private List<Reply> replies;
+        private int userId;
+        private String username; // 게시글 작성자
+        private List<ReplyDTO> replies = new ArrayList<>(); // 순환 참조를 막아야한다. entity를 걸지마라.
         private boolean isOwner;
 
-        @Data
-        private class UserDTO {
-            private int id;
-            private String username;
-            public UserDTO(User user) {
-                this.id = user.getId();
-                this.username = user.getUsername();
-            }
-        }
-
-        public DetailDTO(Board board, List<Reply> replies, User sessionUser) {
+        public DetailDTO(Board board, User sessionUser) {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
-            this.replies = replies;
-            this.user = new UserDTO(board.getUser());
+            this.userId = board.getUser().getId();
+            this.username = board.getUser().getUsername();
+            if (sessionUser != null) {
+                this.isOwner = userId == sessionUser.getId() ? true : false;
+            }
+            this.replies = board.getReplies()
+                    .stream()
+                    .map(reply -> new ReplyDTO(reply, sessionUser))
+                    .toList();
+        }
 
-            this.isOwner = false;
-            // 로그인을 하고, 게시글의 주인이면 isOwner가 true가 된다.
-            if (sessionUser != null){
-                if (sessionUser.getId() == board.getUser().getId()) {
-                    isOwner = true;
+        @Data
+        public class ReplyDTO {
+            private int id;
+            private String comment;
+            private int userId; // 댓글 작성자 아이디
+            private String username; // 댓글 작성자 이름
+            private boolean isOwner; // 댓글 주인
+
+            public ReplyDTO(Reply reply, User sessionUser) {
+                this.id = reply.getId();
+                this.comment = reply.getComment();
+                this.userId = reply.getUser().getId();
+                this.username = reply.getUser().getUsername();
+                if (sessionUser != null) {
+                    this.isOwner = userId == sessionUser.getId() ? true : false;
                 }
             }
-        }
-
-        public DetailDTO(Board board, List<Reply> replies) {
-            this.id = board.getId();
-            this.title = board.getTitle();
-            this.content = board.getContent();
-            this.replies = replies;
-            this.user = new UserDTO(board.getUser());
         }
     }
 }

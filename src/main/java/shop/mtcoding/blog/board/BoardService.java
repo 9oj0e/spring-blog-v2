@@ -65,19 +65,9 @@ public class BoardService {
     }
 
     public BoardResponse.DetailDTO findBoard(int boardId, User sessionUser) {
-        // to detail 글 상세보기
         Board board = boardJPARepository.findByIdJoinUser(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
-        if (sessionUser != null) {
-            board.isBoardOwner(sessionUser);
-            board.getReplies().forEach(reply -> {
-                {
-                    reply.isReplyOwner(sessionUser);
-                }
-            });
-            return new BoardResponse.DetailDTO(board, board.getReplies(), sessionUser);
-        } else {
-            return new BoardResponse.DetailDTO(board, board.getReplies());
-        }
+
+        return new BoardResponse.DetailDTO(board, sessionUser);
     }
 }

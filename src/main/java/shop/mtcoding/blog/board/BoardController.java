@@ -31,9 +31,9 @@ public class BoardController {
     }
 
     @GetMapping("/api/boards/{id}/detail")
-    public ResponseEntity<?> detail(@PathVariable Integer id, BoardResponse.DetailDTO responseDTO) {
+    public ResponseEntity<?> detail(@PathVariable Integer id) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        responseDTO = boardService.findBoard(id, sessionUser);
+        BoardResponse.DetailDTO responseDTO = boardService.findBoard(id, sessionUser);
 
         return ResponseEntity.ok(new ApiUtil<>(responseDTO));
     }
